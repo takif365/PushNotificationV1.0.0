@@ -1,0 +1,50 @@
+name: Send Batch Notifications
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      batch_size:
+        description: 'Batch size'
+        required: false
+        default: '500'
+      title:
+        description: 'Notification title'
+        required: true
+      body:
+        description: 'Notification body'
+        required: true
+      url:
+        description: 'URL to open'
+        required: false
+        default: '/'
+
+jobs:
+  send-batch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: Send Notification Batch
+        run: |
+          curl -X POST "${{ secrets.VERCEL_URL }}/api/send" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.API_SECRET_KEY }}" \
+            -d '{
+              "title": "${{ github.event.inputs.title || 'New Notification' }}",
+              "body": "${{ github.event.inputs.body || 'You have a new update' }}",
+              "url": "${{ github.event.inputs.url || '/' }}",
+              "batchSize": ${{ github.event.inputs.batch_size || 500 }},
+              "requireInteraction": false
+            }' \
+            --fail \
+            --silent \
+            --show-error
+      
+      - name: Check Health
+        run: |
+          curl "${{ secrets.VERCEL_URL }}/api/health" \
+            --fail \
+            --silent \
+            --show-error

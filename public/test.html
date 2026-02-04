@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار Service Worker - Push Notifications</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        .status.success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
+        .status.error { background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
+        .status.warning { background: #fff3cd; color: #856404; border-left: 4px solid #ffc107; }
+        .status.info { background: #d1ecf1; color: #0c5460; border-left: 4px solid #17a2b8; }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        button:hover { background: #5568d3; transform: translateY(-2px); }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #log {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+        .log-success { color: #4ec9b0; }
+        .log-error { color: #f48771; }
+        .log-warning { color: #dcdcaa; }
+        .log-info { color: #9cdcfe; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 اختبار Push Notification System</h1>
+        
+        <button onclick="testServiceWorker()">1️⃣ اختبار Service Worker</button>
+        <button onclick="testNotificationPermission()">2️⃣ طلب أذونات الإشعارات</button>
+        <button onclick="testGetToken()">3️⃣ الحصول على FCM Token</button>
+        <button onclick="clearServiceWorker()">🗑️ حذف Service Worker</button>
+        <button onclick="clearLog()">🧹 مسح السجل</button>
+        
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const log = document.getElementById('log');
+        
+        function addLog(message, type = 'info') {
+            const time = new Date().toLocaleTimeString('ar-SA');
+            const className = `log-${type}`;
+            log.innerHTML += `<div class="${className}">[${time}] ${message}</div>`;
+            log.scrollTop = log.scrollHeight;
+            console.log(message);
+        }
+
+        async function testServiceWorker() {
+            addLog('🔍 بدء اختبار Service Worker...', 'info');
+            
+            if (!('serviceWorker' in navigator)) {
+                addLog('❌ المتصفح لا يدعم Service Workers', 'error');
+                return;
+            }
+            
+            try {
+                const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+                    scope: '/'
+                });
+                addLog('✅ Service Worker مسجل بنجاح!', 'success');
+                addLog(`📍 Scope: ${registration.scope}`, 'info');
+                
+                await navigator.serviceWorker.ready;
+                addLog('✅ Service Worker جاهز!', 'success');
+                
+                return registration;
+            } catch (err) {
+                addLog(`❌ فشل تسجيل Service Worker: ${err.message}`, 'error');
+                throw err;
+            }
+        }
+
+        async function testNotificationPermission() {
+            addLog('🔔 طلب أذونات الإشعارات...', 'info');
+            
+            if (!('Notification' in window)) {
+                addLog('❌ المتصفح لا يدعم الإشعارات', 'error');
+                return;
+            }
+            
+            if (Notification.permission === 'granted') {
+                addLog('✅ الأذونات ممنوحة بالفعل!', 'success');
+                return 'granted';
+            }
+            
+            if (Notification.permission === 'denied') {
+                addLog('❌ الأذونات مرفوضة! امسح بيانات الموقع وحاول مرة أخرى', 'error');
+                return 'denied';
+            }
+            
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                addLog('✅ تم منح الأذونات!', 'success');
+            } else {
+                addLog('❌ تم رفض الأذونات', 'error');
+            }
+            return permission;
+        }
+
+        async function testGetToken() {
+            addLog('🔑 محاولة الحصول على FCM Token...', 'info');
+            
+            try {
+                // تحميل Firebase
+                addLog('📦 تحميل Firebase SDK...', 'info');
+                await loadScript('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
+                await loadScript('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
+                
+                // Firebase Config
+                const config = {
+                    apiKey: "AIzaSyB0grieksKtM28Q8sDqRJtIlCiVOa4O2TI",
+                    projectId: "push-notification-d1fb7",
+                    messagingSenderId: "462544520587",
+                    appId: "1:462544520587:web:7feb1ff5e930f6c81b5b8e",
+                    vapidKey: "BK_xOFHtu1XdPv2GNMxXpUXOr4XM66DCV_78_HioDw8nXzhZYcpzI0irQ5X2_T-BwuVdC6wVTGNJwkEx1zdOyzg"
+                };
+                
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(config);
+                }
+                addLog('✅ Firebase تم تهيئته', 'success');
+                
+                const messaging = firebase.messaging();
+                const registration = await navigator.serviceWorker.getRegistration();
+                
+                addLog('🎯 طلب FCM Token...', 'info');
+                const token = await messaging.getToken({ 
+                    vapidKey: config.vapidKey,
+                    serviceWorkerRegistration: registration
+                });
+                
+                if (token) {
+                    addLog('✅ تم الحصول على Token!', 'success');
+                    addLog(`📝 Token: ${token.substring(0, 50)}...`, 'info');
+                    
+                    // حفظ في Firestore
+                    addLog('💾 حفظ Token في Firestore...', 'info');
+                    await saveToFirestore(token);
+                } else {
+                    addLog('❌ فشل الحصول على Token', 'error');
+                }
+            } catch (err) {
+                addLog(`❌ خطأ: ${err.message}`, 'error');
+                console.error(err);
+            }
+        }
+
+        async function saveToFirestore(token) {
+            const firestoreUrl = `https://firestore.googleapis.com/v1/projects/push-notification-d1fb7/databases/(default)/documents/push_tokens/${token}`;
+            
+            try {
+                const response = await fetch(firestoreUrl + '?updateMask.fieldPaths=token&updateMask.fieldPaths=domain&updateMask.fieldPaths=platform', {
+                    method: 'PATCH',
+                    mode: 'cors',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        fields: {
+                            token: { stringValue: token },
+                            domain: { stringValue: window.location.hostname },
+                            platform: { stringValue: 'web' }
+                        }
+                    })
+                });
+                
+                if (response.ok) {
+                    addLog('✅ Token محفوظ في Firestore!', 'success');
+                    addLog('🎉 العملية نجحت بالكامل!', 'success');
+                } else {
+                    addLog(`❌ فشل حفظ Token: ${response.status}`, 'error');
+                }
+            } catch (err) {
+                addLog(`❌ خطأ في Firestore: ${err.message}`, 'error');
+            }
+        }
+
+        async function clearServiceWorker() {
+            addLog('🗑️ حذف Service Workers...', 'warning');
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (let registration of registrations) {
+                await registration.unregister();
+                addLog(`✅ تم إلغاء: ${registration.scope}`, 'success');
+            }
+            
+            addLog('🗑️ مسح Cache...', 'warning');
+            const cacheNames = await caches.keys();
+            for (let name of cacheNames) {
+                await caches.delete(name);
+                addLog(`✅ تم مسح: ${name}`, 'success');
+            }
+            
+            addLog('✅ تم التنظيف! أعد تحميل الصفحة', 'success');
+        }
+
+        function clearLog() {
+            log.innerHTML = '';
+            addLog('📋 السجل جاهز', 'info');
+        }
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                if (document.querySelector(`script[src="${src}"]`)) return resolve();
+                const s = document.createElement('script');
+                s.src = src;
+                s.onload = resolve;
+                s.onerror = reject;
+                document.head.appendChild(s);
+            });
+        }
+
+        // رسالة البداية
+        addLog('🚀 صفحة الاختبار جاهزة!', 'success');
+        addLog('💡 اضغط الأزرار بالترتيب من 1 إلى 3', 'info');
+    </script>
+</body>
+</html>

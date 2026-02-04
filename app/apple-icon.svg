@@ -1,0 +1,13 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="180" height="180" fill="#000000"/>
+  
+  <!-- Lightning Bolt - Larger and centered -->
+  <path d="M100 35 L100 80 L65 110 L85 110 L75 145 L125 100 L100 100 L100 35 Z" 
+        stroke="#00ffff" 
+        stroke-width="8" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="#00ffff"
+        fill-opacity="0.15"/>
+</svg>

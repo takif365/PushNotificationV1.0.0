@@ -1,0 +1,54 @@
+.landingVoid {
+  background-color: #000;
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.landingTitle {
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  font-weight: 300;
+  margin-bottom: 1rem;
+  color: #eaeaea;
+  text-transform: uppercase;
+}
+
+.landingSubtitle {
+  font-size: 0.8rem;
+  color: #666;
+  letter-spacing: 0.1em;
+  margin-bottom: 3rem;
+  font-family: monospace;
+}
+
+.btnTerminal {
+  background: transparent;
+  border: 1px solid #333;
+  color: #888;
+  padding: 1rem 2rem;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btnTerminal:hover {
+  border-color: #fff;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.landingFooter {
+  position: absolute;
+  bottom: 2rem;
+  font-size: 0.7rem;
+  color: #333;
+  font-family: monospace;
+}

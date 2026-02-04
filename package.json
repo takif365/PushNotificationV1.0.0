@@ -1,0 +1,33 @@
+{
+  "name": "vercel-push-system",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/build-static.js && next dev",
+    "build": "node scripts/build-static.js && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate-vapid": "node scripts/generate-vapid.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.93.3",
+    "chart.js": "^4.4.1",
+    "d3-scale": "^4.0.2",
+    "date-fns": "^3.3.1",
+    "firebase": "^12.8.0",
+    "firebase-admin": "^13.6.0",
+    "lucide-react": "^0.563.0",
+    "react-day-picker": "^8.10.1",
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "19.2.3",
+    "react-simple-maps": "^3.0.0",
+    "web-push": "^3.6.7",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6"
+  }
+}

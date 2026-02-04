@@ -1,0 +1,586 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+/* ============================================================================
+   PRIVATE INFRASTRUCTURE - DESIGN SYSTEM
+   Ultra-Minimalist Dark Theme
+   ============================================================================ */
+
+:root {
+  /* Colors - Black Hole Palette */
+  --bg-void: #000000;
+  --bg-dark: #0a0a0a;
+  --bg-card: #111111;
+  --text-ghost: #ffffff;
+  --text-dim: #666666;
+  --text-whisper: #333333;
+  --accent-neon: #00ffff;
+  --accent-neon-glow: rgba(0, 255, 255, 0.2);
+  --border-subtle: #1a1a1a;
+  --border-active: #2a2a2a;
+
+  /* Typography */
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
+
+/* ============================================================================
+   RESET & BASE
+   ============================================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: var(--bg-void);
+  color: var(--text-ghost);
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* ============================================================================
+   LANDING PAGE - BLACK HOLE INTERFACE
+   ============================================================================ */
+
+.landing-void {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-void);
+  padding: var(--space-lg);
+  position: relative;
+}
+
+.landing-content {
+  text-align: center;
+  max-width: 600px;
+}
+
+.landing-title {
+  font-size: 1.75rem;
+  font-weight: 200;
+  letter-spacing: 0.1em;
+  color: var(--text-ghost);
+  margin-bottom: var(--space-md);
+  text-transform: uppercase;
+}
+
+.landing-subtitle {
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--text-dim);
+  margin-bottom: var(--space-xl);
+  letter-spacing: 0.05em;
+}
+
+.landing-footer {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--text-whisper);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================================================
+   BUTTONS - GHOST & TERMINAL
+   ============================================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-main);
+  text-transform: uppercase;
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ghost:hover {
+  color: var(--text-ghost);
+  border-color: var(--border-active);
+  box-shadow: 0 0 20px var(--accent-neon-glow);
+}
+
+.btn-terminal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background-color: var(--bg-card);
+  border: 2px solid var(--accent-neon);
+  border-radius: var(--radius-sm);
+  color: var(--accent-neon);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-terminal:hover {
+  background-color: var(--accent-neon);
+  color: var(--bg-void);
+  box-shadow: 0 0 20px var(--accent-neon-glow);
+}
+
+.btn-terminal:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================================
+   DASHBOARD LAYOUT
+   ============================================================================ */
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-void);
+}
+
+.dashboard-sidebar {
+  width: 280px;
+  background-color: var(--bg-dark);
+  border-right: 1px solid var(--border-subtle);
+  padding: var(--space-lg);
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.dashboard-main {
+  flex: 1;
+  margin-left: 280px;
+  padding: var(--space-lg);
+  width: calc(100% - 280px);
+}
+
+/* ============================================================================
+   CARDS & CONTAINERS
+   ============================================================================ */
+
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  transition: border-color 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--border-active);
+}
+
+.card-stat {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 0.70rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-xs);
+  opacity: 0.7;
+  /* Fainter */
+}
+
+.stat-value {
+  font-size: 2rem;
+  /* Medium size */
+  font-weight: 100;
+  font-family: var(--font-mono);
+  color: var(--accent-neon);
+  text-shadow: 0 0 20px var(--accent-neon-glow);
+}
+
+/* ============================================================================
+   FORMS
+   ============================================================================ */
+
+.form-group {
+  margin-bottom: var(--space-md);
+}
+
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-xs);
+  font-weight: 400;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.875rem;
+  font-size: 0.875rem;
+  color: var(--text-ghost);
+  font-family: var(--font-main);
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--accent-neon);
+  box-shadow: 0 0 10px var(--accent-neon-glow);
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* ============================================================================
+   GRID LAYOUTS
+   ============================================================================ */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+/* ============================================================================
+   MOBILE NAV BUTTON
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .mobile-nav-btn {
+    display: block !important;
+  }
+
+  .mobile-overlay {
+    display: block !important;
+  }
+
+  .dashboard-sidebar {
+    display: block;
+    /* Ensure it's not hidden by default, relying on transform */
+  }
+}
+
+/* ============================================================================
+   MOBILE RESPONSIVE - CENTER ALIGN
+   ============================================================================ */
+
+/* ============================================================================
+   MOBILE OPTIMIZATION
+   ============================================================================ */
+
+@media (max-width: 768px) {
+
+  /* Landing Page */
+  .landing-title {
+    font-size: 1.25rem;
+  }
+
+  .landing-subtitle {
+    font-size: 0.75rem;
+  }
+
+  /* Dashboard - Collapsible Sidebar */
+  .dashboard-sidebar {
+    display: block !important;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 4500 !important;
+    /* Below hamburger (5000) but above overlay (4000) */
+    background-color: #0e0e0e !important;
+    /* Distinct dark background */
+    width: 280px;
+    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.5);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-right: 1px solid var(--border-active);
+  }
+
+  .dashboard-sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  .mobile-overlay {
+    display: block !important;
+  }
+
+  .mobile-nav-btn {
+    display: block !important;
+  }
+
+  .dashboard-main {
+    margin-left: 0;
+    width: 100%;
+    padding: var(--space-sm);
+  }
+
+  /* Stats Grid - Single Column */
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Touch Targets & Button Unification */
+  .btn {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 0.875rem 1rem;
+    width: 100%;
+    /* Full width buttons on mobile */
+    justify-content: center;
+  }
+
+  /* Center Headers & Content */
+  .dashboard-main h1,
+  .dashboard-main h2,
+  .dashboard-main h3,
+  .dashboard-main p.text-secondary,
+  .dashboard-main p.text-dim,
+  .dashboard-main .form-label {
+    text-align: center;
+  }
+
+  /* Center Stats Cards */
+  .card-stat {
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .desktop-footer {
+    display: none;
+  }
+
+  .mobile-close-btn {
+    display: block !important;
+  }
+
+  /* Fix Action Buttons Stacking */
+  .flex.justify-between,
+  .flex.items-center.justify-between {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch !important;
+  }
+
+  .form-input,
+  .form-textarea {
+    min-height: 44px;
+    font-size: 16px;
+    /* Prevent iOS zoom */
+  }
+
+  /* Stack Header Actions (Create New Campaign, etc) */
+  .header-stack {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+    text-align: center;
+  }
+
+  .header-stack>div {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Better Code Copy Button on Mobile */
+  .code-block-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 3.5rem !important;
+    /* Reserve space at bottom if absolute, or just let flow */
+  }
+
+  .copy-btn {
+    position: static !important;
+    width: 100%;
+    margin-top: 1rem;
+    order: 2;
+    /* Ensure it stays at bottom if using flex */
+  }
+
+  .code-block-wrapper pre {
+    white-space: pre-wrap;
+    /* Wrap long lines on mobile */
+    word-break: break-all;
+  }
+}
+
+/* Desktop Enhancements */
+@media (min-width: 769px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .landing-title {
+    font-size: 2rem;
+  }
+}
+
+/* ============================================================================
+   UTILITIES
+   ============================================================================ */
+
+.text-center {
+  text-align: center;
+}
+
+.mb-sm {
+  margin-bottom: var(--space-sm);
+}
+
+.mb-md {
+  margin-bottom: var(--space-md);
+}
+
+.mb-lg {
+  margin-bottom: var(--space-lg);
+}
+
+.mt-sm {
+  margin-top: var(--space-sm);
+}
+
+.mt-md {
+  margin-top: var(--space-md);
+}
+
+.mt-lg {
+  margin-top: var(--space-lg);
+}
+
+.text-mono {
+  font-family: var(--font-mono);
+}
+
+.text-dim {
+  color: var(--text-dim);
+}
+
+.text-whisper {
+  color: var(--text-whisper);
+}
+
+/* Loading Spinner */
+.spinner {
+  border: 2px solid var(--border-subtle);
+  border-top-color: var(--accent-neon);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Neon Glow Effect */
+.neon-glow {
+  text-shadow: 0 0 10px var(--accent-neon-glow),
+    0 0 20px var(--accent-neon-glow);
+}
+
+/* Fade In Animation */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE MEDIA QUERIES
+   ============================================================================ */
+
+/* Tablet and below - 2 column grid for cards */
+@media (max-width: 1200px) {
+  .card[style*="grid-template-columns"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1rem !important;
+  }
+}
+
+/* Mobile - Single column for cards */
+@media (max-width: 768px) {
+  .card[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Center page headers on mobile */
+  .mb-lg[style*="flex"] {
+    justify-content: center !important;
+  }
+
+  .mb-lg[style*="flex"]>div:first-child {
+    text-align: center !important;
+  }
+
+  .mb-lg h1 {
+    text-align: center !important;
+  }
+
+  .mb-lg p {
+    text-align: center !important;
+  }
+}
