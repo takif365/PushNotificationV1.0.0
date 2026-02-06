@@ -1,0 +1,6 @@
+name = "pns-api-gateway"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+FIREBASE_PROJECT_ID = "push-notification-d1fb7"

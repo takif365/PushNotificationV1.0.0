@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standalone Demo | TakiLabs</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: #f4f4f4;
+        }
+        .content {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        p { color: #666; }
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <h1>Welcome to the Protected Site</h1>
+        <p>If you see this, the security check was successful.</p>
+        <button onclick="location.reload()">Reset & Test Again</button>
+    </div>
+
+    <!-- Integration: Just add this script tag -->
+    <script src="pns-loader.js"></script>
+
+    <script>
+        // Optional: Listen for the success event
+        window.addEventListener('pns-granted', () => {
+            console.log('User granted notification permissions!');
+            // Here you would normally register the service worker and save the token
+        });
+    </script>
+</body>
+</html>

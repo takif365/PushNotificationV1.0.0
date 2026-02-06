@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================================================
+    // HELPER FUNCTIONS
+    // ============================================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    // ============================================================================
+    // USERS COLLECTION
+    // Each user has their own document
+    // ============================================================================
+    
+    match /users/{userId} {
+      // Users can only read/write their own data
+      allow read: if isAuthenticated() && isOwner(userId);
+      allow create: if isAuthenticated() && isOwner(userId);
+      allow update: if isAuthenticated() && isOwner(userId);
+      // No delete - users remain in system
+    }
+    
+    // ============================================================================
+    // DOMAINS COLLECTION
+    // Multi-tenancy: each user manages their own domains
+    // ============================================================================
+    
+    match /domains/{domainId} {
+      // Read: only domain owner
+      allow read: if isAuthenticated() && 
+                     resource.data.userId == request.auth.uid;
+      
+      // Create: must set userId to self
+      allow create: if isAuthenticated() && 
+                       request.resource.data.userId == request.auth.uid;
+      
+      // Update/Delete: only domain owner
+      allow update, delete: if isAuthenticated() && 
+                               resource.data.userId == request.auth.uid;
+    }
+    
+    // ============================================================================
+    // PUSH TOKENS COLLECTION
+    // Public write (for user subscription), private read (for admin)
+    // ============================================================================
+    
+    match /push_tokens/{token} {
+      // PUBLIC WRITE DISABLED: All subscriptions must go through the secure API
+      // allow create, update: ... (Removed for security)
+      allow create, update: if false; 
+      
+      // PRIVATE: Only token owner (if we had user auth on client) or Admin can read
+      // But since tokens are public mainly for subscription, we just lock it down.
+      allow read: if isAuthenticated() && 
+                     resource.data.userId == request.auth.uid;
+      
+      // PRIVATE: Only token owner can delete
+      allow delete: if isAuthenticated() && 
+                       resource.data.userId == request.auth.uid;
+    }
+    
+    // ============================================================================
+    // CAMPAIGNS COLLECTION  
+    // Private: only campaign owner can access
+    // ============================================================================
+    
+    match /campaigns/{campaignId} {
+      // Only campaign owner can read/write
+      allow read, write: if isAuthenticated() && 
+                            (request.resource.data.userId == request.auth.uid ||
+                             resource.data.userId == request.auth.uid);
+    }
+  }
+}
